@@ -21,6 +21,7 @@
 ## Portal brasileiro de dados abertos: www.dados.gov.br 
 ## Kaggle: (competições Machine Learning): www.kaggle.com 
 ## OMS: https://www.who.int/
+## SEADE: https://github.com/seade-R/dados-covid-sp 
 
 
 # Pacotes para baixar dados (API) -----------------------------------------
@@ -36,6 +37,11 @@ install.packages("NOME_PACOTE")
 ## cepR: dados postais do Brasil
 ## GetTDData: Tesouro do governo brasileiro
 ## Quandl: Dados financeiros de companhias (intenacional) 
+
+
+# Nosso projeto -----------------------------------------------------------
+## SEADE: https://github.com/seade-R/dados-covid-sp
+
 
 
  
