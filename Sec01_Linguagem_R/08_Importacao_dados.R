@@ -31,7 +31,7 @@ df3 <- read.csv("dados/questoes.csv", encoding = "UTF-8")
 install.packages("readxl")
 library(readxl)
 
-df4 <- read_xlsx("registro.xlsx")
+df4 <- read_xlsx("dados/registro.xlsx")
 
 
 
