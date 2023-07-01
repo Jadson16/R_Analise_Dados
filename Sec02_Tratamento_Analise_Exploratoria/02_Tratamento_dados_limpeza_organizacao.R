@@ -25,7 +25,7 @@ View(covid_sp)
 
 # Caso tenha erro de encoding
 
-covid_sp <- read.csv2('dados_covid_sp.csv', sep = ";", encoding="UTF-8")
+covid_sp <- read.csv2('dados/dados_covid_sp.csv', sep = ";", encoding="UTF-8")
 View(covid_sp)
 head(covid_sp)
 
@@ -66,11 +66,9 @@ covid_sp_alterado <- covid_sp_alterado %>%
 
 View(covid_sp_alterado)
 
+
+
 #-----------------------------------------------------------
-
-
-
-
 
 # Verificando valores missing (Ausentes)
 # NA = valores ausentes
@@ -78,22 +76,25 @@ View(covid_sp_alterado)
 sapply(covid_sp_alterado, function(x) sum(is.na(x)))
 sapply(covid_sp_alterado, function(x) sum(is.nan(x)))
 
-#Substituir valores missing
+# Substituir valores missing
 
-########### Função mutate all temporariamente desabilitada ######
-# if(!require(tidyr)) install.packages("tidyr")
-# library(tidyr)
+if(!require(tidyr)) install.packages("tidyr")
+library(tidyr)
 
-# covid_sp_alterado2 <- covid_sp_alterado %>% mutate_all(replace_na, 54)
-# View(covid_sp_alterado2)
+covid_sp_alterado2 <- covid_sp_alterado %>% 
+  mutate_all(replace_na, 54)
+View(covid_sp_alterado2)
 ###################################################################
 
-### OPÇÃO:
+### OPÇÃO 2:
 covid_sp_alterado2 <- replace(x = covid_sp_alterado,list = is.na(covid_sp_alterado),
                  values = 54)
 
+# Ao inves de substituir por semana colocar ano
 covid_sp_alterado2$semana_epidem[covid_sp_alterado2$semana_epidem == 54] <- 2021
 
+
+# ao inves de substituir por 2021 eu posso colocar as semanas
 covid_sp_alterado2$semana_epidem[covid_sp_alterado2$data >= '01/01/2021' &
                                    covid_sp_alterado2$data <= '07/01/2021'  ] <- 54
 
@@ -106,7 +107,7 @@ covid_sp_alterado2$semana_epidem[covid_sp_alterado2$data >= '15/01/2021' &
                                    covid_sp_alterado2$data <= '21/01/2021'  ] <- 56
 
 
-
+# -----------------------------------------------------------------------------
 
 #VERIFICAÇÃO DA TIPAGEM DOS ATRIBUTOS (Variáveis)
 # EXISTEM 7 TIPOS BÁSICOS:
@@ -129,21 +130,27 @@ covid_sp_alterado2$data <- as.Date(covid_sp_alterado2$data, format ='%d/%m/%Y')
 glimpse(covid_sp_alterado2)
 
 
-# Alterar várias variáveis de uma única vez
-#covid_sp_alterado2[1:17] <- lapply(covid_sp_alterado2[1:17], as.character)
-#glimpse(covid_sp_alterado2)
 
-
-# Criação de colunas
+# Criando colunas ---------------------------------------------------------
 covid_sp_alterado2["idoso(%)"]<-100*covid_sp_alterado2$pop_60/covid_sp_alterado2$pop
 View(covid_sp_alterado2)
 
-#Exportação de arquivos
-write.table(covid_sp_alterado2, file ="covid_sp_tratado.txt", sep = ",")
+# ou
+covid_sp_alterado2$`idoso(%)` <- NULL # para remorar a coluna criada
+
+covid_sp_alterado2 <- covid_sp_alterado2 %>%
+  mutate("idoso(%)" =  100*pop_60/pop)
 
 
-# Opção de exportação de arquivos
+# Exportação de arquivos --------------------------------------------------
+write.table(covid_sp_alterado2, file ="covid_sp_tratado.csv", sep = ",")
+
+
+# Opção de exportação de arquivos -----------------------------------------
 install.packages("readr", dependencies = TRUE)
 library("readr")
 write_delim(covid_sp_alterado2, "covid_sp_tratado.csv", delim = ",")
 
+# outras opções
+library(writexl)
+write_xlsx(covid_sp_alterado2, "covid_sp_tratado.xlsx")
