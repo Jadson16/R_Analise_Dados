@@ -143,14 +143,15 @@ covid_sp_alterado2 <- covid_sp_alterado2 %>%
 
 
 # Exportação de arquivos --------------------------------------------------
-write.table(covid_sp_alterado2, file ="covid_sp_tratado.csv", sep = ",")
+write.table(covid_sp_alterado2, file ="dados/covid_sp_tratado.csv", sep = ",")
 
 
 # Opção de exportação de arquivos -----------------------------------------
 install.packages("readr", dependencies = TRUE)
 library("readr")
-write_delim(covid_sp_alterado2, "covid_sp_tratado.csv", delim = ",")
+write_delim(covid_sp_alterado2, "dados/covid_sp_tratado.csv", delim = ",")
 
 # outras opções
 library(writexl)
-write_xlsx(covid_sp_alterado2, "covid_sp_tratado.xlsx")
+write_xlsx(covid_sp_alterado2, "dados/covid_sp_tratado.xlsx")
+
