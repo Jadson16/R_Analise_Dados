@@ -1,5 +1,5 @@
 ############################################
-###    EXPLORAÇÃOO E ANÁLISE DOS DADOS    ###
+###    EXPLORAÇÃO E ANÁLISE DOS DADOS    ###
 ############################################
 
 # CARREGAR PACOTES ----------------------------------------------------------
@@ -78,20 +78,26 @@ View(covid_guarulhos)
 ####################################################################
 ### ANáLISES ESTATíSTICAS
 ####################################################################
-# Medidas de centralidade
+
+# Medidas de centralidade -----------------------------------
 
 # Média
 mean(covid_campinas$obitos_novos)
 mean(covid_campinas$casos_novos)
 
+## média para varias variáveis
 summarise_at(covid_campinas, vars(obitos_novos, casos_novos), mean)
 
 mean(covid_guarulhos$obitos_novos)
 mean(covid_guarulhos$casos_novos)
 
-# Média móvel
-plot(covid_campinas$data,covid_campinas$casos_mm7d, title("M?DIA M?VEL"), col = "red")
-plot(covid_campinas$data,covid_campinas$obitos_mm7d, title("M?DIA M?VEL"), col = "purple")
+# Plotando um gráfico simples - Média móvel -
+plot(covid_campinas$data,covid_campinas$casos_mm7d, 
+     title("MÉDIA MÓVEL"), 
+     col = "red")
+
+plot(covid_campinas$data,covid_campinas$obitos_mm7d, 
+     title("MÉDIA MÓVEL"), col = "purple")
 
 
 # Mediana
@@ -107,8 +113,8 @@ median(covid_guarulhos$casos_novos)
 
 # Criando uma função
 moda <- function(m) {
-  valor_unico <- unique(m) #Busca o valor ?nico para a coluna.
-  valor_unico[which.max(tabulate(match(m, valor_unico)))] #tabular (contabilizar quantas vezes o valor ?nico aparece) e buscar o maior valor
+  valor_unico <- unique(m) #Busca o valor único para a coluna.
+  valor_unico[which.max(tabulate(match(m, valor_unico)))] #tabular (contabilizar quantas vezes o valor único aparece) e buscar o maior valor
 }
 
 # Obtenção da moda
@@ -121,27 +127,36 @@ moda(covid_guarulhos$obitos_novos)
 moda(covid_guarulhos$casos_novos)
 
 
+# Podemos atribuir um resultado em um objeto para ser 
+# utilizado posteriormente
 
 
 
 
 
+# Medidas de centralidade -------------------------------------------------
+## Estudo para um mês
 
+## Exemplo campinas
+covid_julho_campinas <- covid_campinas %>% 
+  filter(mes==7)
 
-
-covid_julho_campinas <- covid_campinas %>% filter(mes==7)
+# Estudo da moda para o mês de julho
 moda(covid_julho_campinas$obitos_novos)
 moda(covid_julho_campinas$casos_novos)
-summarise_at(covid_julho_campinas, vars(obitos_novos, casos_novos), moda)
+summarise_at(covid_julho_campinas, 
+             vars(obitos_novos, casos_novos), 
+             moda)
 
 mean(covid_julho_campinas$obitos_novos)
 mean(covid_julho_campinas$casos_novos)
 
-# Histograma
-
+# Histograma - built-in (R Base)
+# Cidade Campinas
 hist(covid_julho_campinas$obitos_novos, col="blue")
 hist(covid_julho_campinas$casos_novos, col="red")
 
+# para toda a serie
 hist(covid_campinas$obitos_novos, col="blue")
 hist(covid_campinas$casos_novos, col="red")
 
@@ -152,12 +167,15 @@ hist(covid_guarulhos$casos_novos, col="yellow")
 
 
 
-
-
-
-
-
-# Medidas de posição
+# Medidas de dispersão e posição -----------------------------------------
+## A média pode não ser uma boa medida 
+## Amplitude (Max. e Min.)
+## Desvio Populacional (diferença entre o valor e a média)
+## Variancia Populacional (desvio ao quadrado)
+## Desvio padrão populacional (Raiz quadrada da variância)
+## Mas não trabalhamos com a população. Ajuste (n-1)
+## Quartis (divisão do conjunto de dados em partes iguais)
+## Amplitude Interquantil (Q3 - Q1) - Box plot
 
 # Mínimo
 min(covid_campinas$obitos_novos)
@@ -177,22 +195,29 @@ max(covid_guarulhos$obitos_novos)
 max(covid_guarulhos$casos_novos)
 
 # Amplitude Total
+# campinas
 range(covid_campinas$obitos_novos)
 range(covid_campinas$casos_novos)
-summarise_at(covid_campinas, vars(obitos_novos, casos_novos), range)
+summarise_at(covid_campinas, 
+             vars(obitos_novos, casos_novos), 
+             range)
 
+# guarulos
 range(covid_guarulhos$obitos_novos)
 range(covid_guarulhos$casos_novos)
 
 # Quartis
 quantile(covid_campinas$obitos_novos)
 quantile(covid_campinas$casos_novos)
-summarise_at(covid_campinas, vars(obitos_novos, casos_novos), quantile)
+summarise_at(covid_campinas, 
+             vars(obitos_novos, casos_novos), 
+             quantile)
 
 quantile(covid_guarulhos$obitos_novos)
 quantile(covid_guarulhos$casos_novos)
 
 # Amplitude Interquartil
+# Ex. 1, 1, 2, 2, 3, 3, 3, 7, 8, 8, 8, 10, 12, 15, 37
 IQR(covid_campinas$obitos_novos)
 IQR(covid_campinas$casos_novos)
 summarise_at(covid_campinas, vars(obitos_novos, casos_novos), IQR)
@@ -201,14 +226,7 @@ IQR(covid_guarulhos$obitos_novos)
 IQR(covid_guarulhos$casos_novos)
 
 
-
-
-
-
-
-
-
-
+# Todos os Quantis sumarizado
 
 summary(covid_campinas$obitos_novos)
 summary(covid_campinas$casos_novos)
@@ -218,12 +236,14 @@ summary(covid_guarulhos$casos_novos)
 
 
 # Box Plot
+## Campinas - Julho
 summary(covid_julho_campinas$obitos_novos)
 boxplot(covid_julho_campinas$obitos_novos)
 
 summary(covid_julho_campinas$casos_novos)
 boxplot(covid_julho_campinas$casos_novos)
 
+## campinas - geral
 summary(covid_campinas$casos_novos)
 boxplot(covid_campinas$casos_novos)
 
@@ -233,40 +253,56 @@ boxplot(covid_guarulhos$casos_novos)
 # Tratando os outliers -------------------------------------
 
 # Identificando e excluindo todos os outliers
-covid_guarulhos %>% identify_outliers(casos_novos)
+
+## Identificando a existência de outliers
+covid_guarulhos %>% 
+  identify_outliers(casos_novos)
+
+## Exclur os outliers
 outliers = c(boxplot.stats(covid_guarulhos$casos_novos)$out)
-covid_guarulhos_sem_outliers <- covid_guarulhos[-c(which(covid_guarulhos$casos_novos %in% outliers)),  ]
+
+# Agora sem outliers
+covid_guarulhos_sem_outliers <- covid_guarulhos[-c(which(covid_guarulhos$casos_novos %in% outliers)),  ] # excluir a linha
 boxplot(covid_guarulhos_sem_outliers$casos_novos)
 
 
-# Excluindo alguns outliers
+# Excluindo alguns outliers ------------------
+
+## Identificando a existência de outliers
 covid_campinas %>% identify_outliers(casos_novos)
-covid_campinas_sem_outliers<-covid_campinas %>% filter(data != "2020-06-19")
+
+## selecionando sem os outliers
+covid_campinas_sem_outliers<-covid_campinas %>% 
+  filter(data != "2020-06-19")
+
+## blox plot sem outliers
 boxplot(covid_campinas_sem_outliers$casos_novos)
 
 
-# O summary resulta em resumo estat?stico
-# de todas as vari?veis num?ricas/inteiras
-summary (covid_guarulhos)
+# O summary resulta em resumo estatístico
+# de todas as variáveis numéricas/inteiras
+summary(covid_guarulhos)
 
 
+# Medidas de Dispersão ----------------------------------------------------
+# - Grau de dispersão em relação a média
 
+# Variância (subtria da média e eleva ao quadrado)
 
-
-# Medidas de Dispersão
-
-# Variãncia
+## campinas
 var(covid_campinas$obitos_novos)
 var(covid_campinas$casos_novos)
 
+# grarulhos
 var(covid_guarulhos$obitos_novos)
 var(covid_guarulhos$casos_novos)
 
+# campinas - julho
 var(covid_julho_campinas$obitos_novos)
 var(covid_julho_campinas$casos_novos)
 
 
-# Desvio padrão
+# Desvio padrão (raiz quadrada da variância)
 sd(covid_campinas$obitos_novos)
 sd(covid_campinas$casos_novos)
 
@@ -283,10 +319,9 @@ sd(covid_julho_campinas$casos_novos)
 
 
 
+# TESTES DE NORMALIDADE ---------------------------------------------------
 
-# TESTES DE NORMALIDADE
-
-# Existem 4 testes de normalidade principais (num?ricos) e dois testes gr?ficos:
+# Existem 4 testes de normalidade principais (numéricos) e dois testes gráficos:
 # Shapiro-Wilk (limite de 5000 amostras)
 # Anderson-Darling
 # Kolmogorov_Smirnov
@@ -294,8 +329,8 @@ sd(covid_julho_campinas$casos_novos)
 # Histograma
 # QQplot
 
-# N?vel de signific?ncia DE 0,05(5%) ou n?vel de confian?a de 95%(MAIS UTILIZADO):
-# Quando o par?metro p > 0,05 (distribui??o normal).
+# N?vel de significância DE 0,05(5%) ou nível de confian?a de 95%(MAIS UTILIZADO):
+# Quando o par?metro p > 0,05 (distribuição normal).
 
 
 if(!require(nortest)) install.packages("nortest")
